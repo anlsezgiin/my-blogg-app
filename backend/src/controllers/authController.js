@@ -35,7 +35,13 @@ export const loginUser = async (req, res) => {
         const isMatch = await bcrypt.compare(password, hashedPassword);
 
         if (isMatch) {
-            res.status(200).json({ message: "Giriş Başarılı!" });
+            // session save
+            console.log(result.rows[0]);
+            req.session.user = {
+                id: result.rows[0].id,
+                username: result.rows[0].username
+            };
+            res.status(200).json({ message: "Giriş Başarılı!", user: req.session.user });
         } else {
             res.status(401).json({ error: "Kullanıcı adı veya şifre hatalı!" });
         }

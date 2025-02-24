@@ -3,7 +3,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import bodyParser from "body-parser";
+import session from "express-session";
 import authRoutes from "./src/routes/authRoutes.js"; // Auth rotalarını içe aktarıyoruz
+import blogRoutes from "./src/routes/blogRoutes.js";
 import connectDB from "./src/database/postgre.js"; // DB bağlantısını dahil et
 
 dotenv.config();
@@ -19,8 +21,16 @@ app.use(morgan("dev"));
 // database connection
 connectDB();
 
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, httpOnly: true, maxAge: 1000 * 60 * 60 } // 1 saat
+}));
+
 // routes
 app.use("/", authRoutes);
+app.use("/", blogRoutes);
 
 app.get("/", (req, res) => {
     res.send("Backend Çalışıyor! 🚀");
