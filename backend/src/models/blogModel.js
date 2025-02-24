@@ -10,13 +10,8 @@ export const getBlogsByUserId = async (userId) => {
     return await db.query("SELECT * FROM blogs WHERE user_id = $1", [userId]);
 };
 
-export const updateBlogTitle = async (userId, blogId, title) => {
-    return await db.query(`
-        UPDATE blogs
-        SET title = $1
-        WHERE id = $2 AND user_id = $3
-        RETURNING *;
-    `,[title, blogId, userId]);
+export const getBlogById = async (userId, blogId) => {
+    return await db.query("SELECT * FROM blogs WHERE user_id = $1 AND id = $2", [userId, blogId]);
 };
 
 
